@@ -1,0 +1,416 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Class</mat-card-title>
+    <mat-card-subtitle>create new class</mat-card-subtitle>
+  </mat-card-header>
+  <br />
+
+  <mat-card-content>
+    <div class="toggle">
+      <mat-slide-toggle [(ngModel)]="isChecked" labelPosition="before"
+        >Class List</mat-slide-toggle
+      >
+    </div>
+    <h2 class="content-header">Create new class</h2>
+    <div class="body-content">
+      <mat-vertical-stepper #stepper class="full-width">
+        <mat-step
+          [stepControl]="nameFormGroup"
+          errorMessage="Name is required."
+        >
+          <form [formGroup]="nameFormGroup">
+            <ng-template matStepLabel>Class Name</ng-template>
+            <br />
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Name</mat-label>
+              <input
+                matInput
+                formControlName="nameCtrl"
+                required
+                [(ngModel)]="newClass.name"
+              />
+            </mat-form-field>
+            <div>
+              <button mat-button matStepperNext>Next</button>
+            </div>
+          </form>
+        </mat-step>
+
+        <mat-step
+          [stepControl]="subjectFormGroup"
+          errorMessage="Subject is required."
+        >
+          <form [formGroup]="subjectFormGroup">
+            <ng-template matStepLabel>Subject</ng-template>
+            <br />
+
+            <h2 class="content-header2">Subject List</h2>
+            <mat-form-field class="full-width">
+              <mat-label>Search Subject</mat-label>
+              <input
+                matInput
+                (keyup)="applySubjectFilter($event)"
+                #inputSubject
+              />
+            </mat-form-field>
+            <div class="table">
+              <table mat-table [dataSource]="subjectDataSource">
+                <ng-container matColumnDef="code">
+                  <th mat-header-cell *matHeaderCellDef>Code</th>
+                  <td mat-cell *matCellDef="let element">{{ element.subjectCode }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Name</th>
+                  <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Action</th>
+                  <td mat-cell *matCellDef="let element">
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      style="margin-right: 8px"
+                      (click)="getSelectedSubject(element, showSelectedSubject)"
+                    >
+                      Select
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="subjectDisplayedColumns"
+                ></tr>
+                <tr
+                  mat-row
+                  matRipple
+                  *matRowDef="let row; columns: subjectDisplayedColumns"
+                ></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" colspan="4">
+                    No subject that matches "{{ inputSubject.value }}"
+                  </td>
+                </tr>
+              </table>
+
+              <mat-paginator
+                SubjectMatPaginator
+                [pageSizeOptions]="[5, 10, 20, 50, 100]"
+                showFirstLastButtons
+              >
+              </mat-paginator>
+            </div>
+            <br />
+
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Subject</mat-label>
+              <input
+                matInput
+                readonly
+                formControlName="subjectCtrl"
+                #showSelectedSubject
+                value=" {{ selectedSubject.subjectCode }} {{ selectedSubject.name }}"
+              />
+            </mat-form-field>
+            <div>
+              <button mat-button matStepperPrevious>Back</button>
+              <button mat-button matStepperNext>Next</button>
+            </div>
+          </form>
+        </mat-step>
+
+        <mat-step
+          [stepControl]="lecturerFormGroup"
+          errorMessage="Lecturer is required."
+        >
+          <form [formGroup]="lecturerFormGroup">
+            <ng-template matStepLabel>Lecturer</ng-template>
+            <br />
+
+            <h2 class="content-header2">Lecturer List</h2>
+            <mat-form-field class="full-width">
+              <mat-label>Search Lecturer</mat-label>
+              <input
+                matInput
+                (keyup)="applyLecturerFilter($event)"
+                #inputLecturer
+              />
+            </mat-form-field>
+            <div class="table">
+              <table mat-table [dataSource]="lecturerDataSource">
+                <ng-container matColumnDef="userId">
+                  <th mat-header-cell *matHeaderCellDef>Lecturer ID</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.userId }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Name</th>
+                  <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="email">
+                  <th mat-header-cell *matHeaderCellDef>Email</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.email }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Action</th>
+                  <td mat-cell *matCellDef="let element">
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      style="margin-right: 8px"
+                      (click)="
+                        getSelectedLecturer(element, showSelectedLecturer)
+                      "
+                    >
+                      Select
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr
+                  mat-header-row
+                  *matHeaderRowDef="lecturerDisplayedColumns"
+                ></tr>
+                <tr
+                  mat-row
+                  matRipple
+                  *matRowDef="let row; columns: lecturerDisplayedColumns"
+                ></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" colspan="4">
+                    No lecturer that matches "{{ inputLecturer.value }}"
+                  </td>
+                </tr>
+              </table>
+
+              <mat-paginator
+                LecturerMatPaginator
+                [pageSizeOptions]="[5, 10, 20, 50, 100]"
+                showFirstLastButtons
+              >
+              </mat-paginator>
+            </div>
+            <br />
+
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Lecturer</mat-label>
+              <input
+                matInput
+                readonly
+                formControlName="lecturerCtrl"
+                #showSelectedLecturer
+                value="ID:{{ selectedLecturer.userId }} {{
+                  selectedLecturer.name
+                }}"
+              />
+            </mat-form-field>
+            <div>
+              <button mat-button matStepperPrevious>Back</button>
+              <button mat-button matStepperNext>Next</button>
+            </div>
+          </form>
+        </mat-step>
+
+        <mat-step>
+          <ng-template matStepLabel>Student List</ng-template>
+          <br />
+
+          <h2 class="content-header2">Student List</h2>
+          <mat-form-field class="full-width">
+            <mat-label>Search Student</mat-label>
+            <input
+              matInput
+              (keyup)="applyStudentFilter($event)"
+              #inputStudent
+            />
+          </mat-form-field>
+          <div class="table">
+            <table mat-table [dataSource]="studentDataSource">
+              <ng-container matColumnDef="userId">
+                <th mat-header-cell *matHeaderCellDef>Student ID</th>
+                <td mat-cell *matCellDef="let element">{{ element.userId }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef>Email</th>
+                <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>Action</th>
+                <td mat-cell *matCellDef="let element">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    style="margin-right: 8px"
+                    (click)="getSelectedStudent(element)"
+                  >
+                    Select
+                  </button>
+                </td>
+              </ng-container>
+              <tr
+                mat-header-row
+                *matHeaderRowDef="studentDisplayedColumns"
+              ></tr>
+              <tr
+                mat-row
+                matRipple
+                *matRowDef="let row; columns: studentDisplayedColumns"
+              ></tr>
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">
+                  No student that matches "{{ inputStudent.value }}"
+                </td>
+              </tr>
+            </table>
+
+            <mat-paginator
+              StudentMatPaginator
+              [pageSizeOptions]="[5, 10, 20, 50, 100]"
+              showFirstLastButtons
+            >
+            </mat-paginator>
+          </div>
+          <br /><br />
+          <h2 class="content-header">
+            Students participating in class {{ newClass.name }}
+          </h2>
+          <mat-form-field class="full-width">
+            <mat-label>Search Student</mat-label>
+            <input
+              matInput
+              (keyup)="applyNewStudentFilter($event)"
+              #inputNewStudent
+            />
+          </mat-form-field>
+          <div class="table">
+            <table mat-table [dataSource]="newStudentDataSource">
+              <ng-container matColumnDef="userId">
+                <th mat-header-cell *matHeaderCellDef>Student ID</th>
+                <td mat-cell *matCellDef="let element">{{ element.userId }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef>Email</th>
+                <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>Action</th>
+                <td mat-cell *matCellDef="let element">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    style="margin-right: 8px"
+                    (click)="removeSelectedStudent(element)"
+                  >
+                    Remove
+                  </button>
+                </td>
+              </ng-container>
+              <tr
+                mat-header-row
+                *matHeaderRowDef="newStudentDisplayedColumns"
+              ></tr>
+              <tr
+                mat-row
+                matRipple
+                *matRowDef="let row; columns: newStudentDisplayedColumns"
+              ></tr>
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">
+                  No student that matches "{{ inputNewStudent.value }}"
+                </td>
+              </tr>
+            </table>
+
+            <mat-paginator
+              NewStudentMatPaginator
+              [pageSizeOptions]="[5, 10, 20, 50, 100]"
+              showFirstLastButtons
+            >
+            </mat-paginator>
+          </div>
+          <br />
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="confirmCreateClass($event)"
+            >
+              Create Class
+            </button>
+          </div>
+        </mat-step>
+      </mat-vertical-stepper>
+    </div>
+    <br />
+
+    <div class="body-content" *ngIf="isChecked">
+      <mat-form-field class="full-width">
+        <mat-label>Search Class</mat-label>
+        <input matInput (keyup)="applyClassFilter($event)" #inputClass />
+      </mat-form-field>
+      <div class="table">
+        <table mat-table [dataSource]="classDataSource">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="subject">
+            <th mat-header-cell *matHeaderCellDef>Subject</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.subject.name }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="lecturer">
+            <th mat-header-cell *matHeaderCellDef>Lecturer</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.lecturer.name }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="classDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: classDisplayedColumns"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              No class that matches "{{ inputClass.value }}"
+            </td>
+          </tr>
+        </table>
+
+        <mat-paginator
+          ClassMatPaginator
+          [pageSizeOptions]="[5, 10, 20, 50, 100]"
+          showFirstLastButtons
+        >
+        </mat-paginator>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

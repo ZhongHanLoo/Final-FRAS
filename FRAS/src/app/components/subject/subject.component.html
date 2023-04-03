@@ -1,0 +1,162 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Subject</mat-card-title>
+    <mat-card-subtitle>
+      view list of subject or create new subject
+    </mat-card-subtitle>
+  </mat-card-header>
+  <br />
+
+  <mat-card-content>
+    <h2 class="content-header">Subject List</h2>
+    <div class="body-content">
+      <mat-form-field class="full-width">
+        <mat-label>Search Subject</mat-label>
+        <input matInput (keyup)="applyFilter($event)" #input />
+      </mat-form-field>
+      <div class="table">
+        <table mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="code">
+            <th mat-header-cell *matHeaderCellDef>Code</th>
+            <td mat-cell *matCellDef="let element">{{ element.subjectCode }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Action</th>
+            <td mat-cell *matCellDef="let element">
+              <button
+                mat-raised-button
+                color="primary"
+                style="margin-right: 8px"
+                (click)="getSelectedSubject(element, editSection)"
+              >
+                Edit
+              </button>
+              <button
+                mat-raised-button
+                color="warn"
+                (click)="confirmDelete($event, element)"
+              >
+                Delete
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              No subject that matches "{{ input.value }}"
+            </td>
+          </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100]" showFirstLastButtons>
+        </mat-paginator>
+      </div>
+    </div>
+    <br />
+
+    <mat-accordion class="body-content">
+      <mat-expansion-panel
+        hideToggle
+        class="full-width"
+        [disabled]="isEditDisabled"
+        [expanded]="isExpanded"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>Edit Subject</mat-panel-title>
+          <mat-panel-description>
+            Select subject from above to edit
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <form class="body-content" #editSection>
+          <mat-form-field class="full-width">
+            <mat-label>Subject Code</mat-label>
+            <input
+              matInput
+              [formControl]="editSubjectCodeFormControl"
+              [(ngModel)]="selectedSubject.subjectCode"
+            />
+
+            <mat-error *ngIf="editSubjectCodeFormControl.hasError('required')">
+              Subject Code is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="full-width">
+            <mat-label>Subject Name</mat-label>
+            <input
+              matInput
+              [formControl]="editNameFormControl"
+              [(ngModel)]="selectedSubject.name"
+            />
+            <mat-error *ngIf="editNameFormControl.hasError('required')">
+              Subject Name is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <button
+            [disabled]="
+              editSubjectCodeFormControl.invalid || editNameFormControl.invalid
+            "
+            mat-raised-button
+            color="primary"
+            (click)="confirmUpdate($event)"
+          >
+            Edit Subject
+          </button>
+        </form>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="full-width">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Create new Subject</mat-panel-title>
+        </mat-expansion-panel-header>
+        <form class="body-content">
+          <mat-form-field class="full-width">
+            <mat-label>Subject Code</mat-label>
+            <input
+              matInput
+              [formControl]="subjectCodeFormControl"
+              [(ngModel)]="newSubject.subjectCode"
+            />
+
+            <mat-error *ngIf="subjectCodeFormControl.hasError('required')">
+              Subject Code is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="full-width">
+            <mat-label>Subject Name</mat-label>
+            <input
+              matInput
+              [formControl]="nameFormControl"
+              [(ngModel)]="newSubject.name"
+            />
+            <mat-error *ngIf="nameFormControl.hasError('required')">
+              Subject Name is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <button
+            [disabled]="
+              subjectCodeFormControl.invalid || nameFormControl.invalid
+            "
+            mat-raised-button
+            color="primary"
+            (click)="confirmCreate($event)"
+          >
+            Create Subject
+          </button>
+        </form>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card-content>
+</mat-card>

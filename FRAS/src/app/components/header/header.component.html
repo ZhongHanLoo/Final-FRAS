@@ -1,0 +1,14 @@
+<mat-toolbar color="primary">
+    <button mat-icon-button class="example-icon" (click)="toggleSidenav()">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span style="flex: 1 1 auto;">FRAS</span>
+    <span class="example-spacer"></span>
+    <button mat-icon-button class="example-icon" [matMenuTriggerFor]="Menu">
+        <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #Menu="matMenu" xPosition="before">
+        <button mat-menu-item routerLink="/profile">Profile</button>
+        <button mat-menu-item >Logout</button>
+    </mat-menu>
+</mat-toolbar>

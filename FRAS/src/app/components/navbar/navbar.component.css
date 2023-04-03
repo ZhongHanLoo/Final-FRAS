@@ -1,0 +1,10 @@
+.mat-expansion-panel {
+  background-color: inherit;
+  border: none;
+  box-shadow: none;
+  padding-right: 15px;
+}
+
+.mat-expansion-panel-header {
+  padding: 0;
+}

@@ -1,0 +1,238 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Class</mat-card-title>
+    <mat-card-subtitle>
+      Classes lecturer are responsible for
+    </mat-card-subtitle>
+  </mat-card-header>
+  <br />
+
+  <mat-card-content>
+    <mat-accordion class="body-content">
+      <mat-expansion-panel
+        hideToggle
+        class="full-width"
+        [disabled]="isDisabled"
+        [expanded]="isExpandedClass"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>Class List</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-form-field class="full-width">
+          <mat-label>Search Class</mat-label>
+          <input matInput (keyup)="applyClassFilter($event)" #inputClass />
+        </mat-form-field>
+        <div class="table">
+          <table mat-table [dataSource]="classDataSource">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Class Name</th>
+              <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="subject">
+              <th mat-header-cell *matHeaderCellDef>Subject</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.subject.name }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="session">
+              <th mat-header-cell *matHeaderCellDef>Session Count</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.sessionList.length }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef>Action</th>
+              <td mat-cell *matCellDef="let element">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  style="margin-right: 8px"
+                  (click)="getSelectedClass(element)"
+                >
+                  Select
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="classDisplayedColumns"></tr>
+            <tr
+              mat-row
+              matRipple
+              *matRowDef="let row; columns: classDisplayedColumns"
+            ></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">
+                No class that matches "{{ inputClass.value }}"
+              </td>
+            </tr>
+          </table>
+
+          <mat-paginator
+            ClassMatPaginator
+            [pageSizeOptions]="[5, 10, 20, 50, 100]"
+            showFirstLastButtons
+          >
+          </mat-paginator>
+        </div>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel hideToggle class="full-width">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Session List</mat-panel-title>
+          <button mat-raised-button color="primary" (click)="newSession()">
+            New Session
+          </button>
+        </mat-expansion-panel-header>
+        <mat-form-field class="full-width">
+          <mat-label>Search Session</mat-label>
+          <input matInput (keyup)="applySessionFilter($event)" #inputSession />
+        </mat-form-field>
+        <div class="table">
+          <table mat-table [dataSource]="sessionDataSource">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.date }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef>Action</th>
+              <td mat-cell *matCellDef="let element">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  style="margin-right: 8px"
+                  (click)="getSelectedSession(element)"
+                >
+                  Select
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="sessionDisplayedColumns"></tr>
+            <tr
+              mat-row
+              matRipple
+              *matRowDef="let row; columns: sessionDisplayedColumns"
+            ></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">
+                No session that matches "{{ inputSession.value }}"
+              </td>
+            </tr>
+          </table>
+
+          <mat-paginator
+            SessionMatPaginator
+            [pageSizeOptions]="[5, 10, 20, 50, 100]"
+            showFirstLastButtons
+          >
+          </mat-paginator>
+        </div>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel hideToggle class="full-width">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Attendance Report</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-form-field class="full-width">
+          <mat-label>Search Student</mat-label>
+          <input
+            matInput
+            (keyup)="applyAttendanceReportFilter($event)"
+            #inputAttendanceReport
+          />
+        </mat-form-field>
+        <div class="table">
+          <table mat-table [dataSource]="attendanceReportDataSource">
+            <ng-container matColumnDef="userId">
+              <th mat-header-cell *matHeaderCellDef>Student ID</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.user.userId }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.user.name }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="attendanceCheck">
+                <th mat-header-cell *matHeaderCellDef>Attendance</th>
+                <td mat-cell *matCellDef="let attendance">
+                  <mat-checkbox [(ngModel)]="attendance.attendanceCheck"></mat-checkbox>
+                </td>
+              </ng-container>
+
+            <tr
+              mat-header-row
+              *matHeaderRowDef="attendanceReportDisplayedColumns"
+            ></tr>
+            <tr
+              mat-row
+              matRipple
+              *matRowDef="let row; columns: attendanceReportDisplayedColumns"
+            ></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">
+                No student that matches "{{ inputAttendanceReport.value }}"
+              </td>
+            </tr>
+          </table>
+
+          <mat-paginator
+            AttendanceReportMatPaginator
+            [pageSizeOptions]="[5, 10, 20, 50, 100]"
+            showFirstLastButtons
+          >
+          </mat-paginator>
+        </div>
+        <br />
+        <mat-form-field class="full-width" *ngIf="addNewSession">
+          <mat-label>Session Name</mat-label>
+          <input
+            matInput
+            [formControl]="nameFormControl"
+            [(ngModel)]="newSessionName"
+          />
+          <mat-error *ngIf="nameFormControl.hasError('required')">
+            Session Name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <div class="body-content">
+          <button
+            *ngIf="addNewSession"
+            [disabled]="nameFormControl.invalid"
+            mat-raised-button
+            color="primary"
+            (click)="confirmSaveNewSession($event)"
+          >
+            Save New Session
+          </button>
+          <button
+            *ngIf="!addNewSession"
+            mat-raised-button
+            color="primary"
+            (click)="confirmUpdateAttendance($event)"
+          >
+            Update Attendance
+          </button>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card-content>
+</mat-card>
