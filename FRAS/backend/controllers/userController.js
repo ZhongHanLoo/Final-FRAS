@@ -78,17 +78,7 @@ exports.getAllLecturer = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-  User.findOne({  userId: req.body.userId}).then((user) => {
-    if (!user) {
-      return res.status(401).json({
-        message: "Authentication failed",
-      });
-    }
-    if (user.password !== req.body.password) {
-      return res.status(401).json({
-        message: "Authentication failed",
-      });
-    }
+  User.findOne({  userId: req.params.id} ).then((user) => {
     res.status(200).json({
       message: "User fetched successfully",
       user: user,

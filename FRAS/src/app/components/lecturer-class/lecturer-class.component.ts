@@ -40,6 +40,7 @@ export class LecturerClassComponent implements OnInit {
   classList: any;
   sessionList: any;
   attendanceList: any;
+  attendanceList2: AttendanceReport[] = [];
 
   selectedClass: Class = {
     _id: '',
@@ -122,8 +123,22 @@ export class LecturerClassComponent implements OnInit {
 
   getSelectedSession(session: any) {
     this.selectedSession = { ...session };
+    console.log(this.selectedSession);
     this.sessionService.getSession(this.selectedSession).subscribe((result) => {
-      this.attendanceList = result.attendanceReport;
+      this.attendanceList = result.session.attendanceReport;
+      // for (let i = 0; i < this.attendanceList.length; i++) {
+      //   let user = this.attendanceList[i]._id;
+      //   this.attendanceService.getAttendance(user).subscribe((result2) => {
+      //     this.attendanceList2.push(...result2);
+      //     this.attendanceReportDataSource =
+      //       new MatTableDataSource<AttendanceReport>(this.attendanceList2);
+      //     this.attendanceReportDataSource.paginator =
+      //       this.attendanceReportPaginator;
+      //   });
+
+      // }
+       console.log(this.attendanceList);
+      //this.attendanceList = this.selectedSession.attendanceReport;
       this.attendanceReportDataSource =
         new MatTableDataSource<AttendanceReport>(this.attendanceList);
       this.attendanceReportDataSource.paginator =
@@ -236,13 +251,15 @@ export class LecturerClassComponent implements OnInit {
     this.getAttendanceReportDate().then((newSessionCreated) => {
       this.selectedSession.attendanceReport =
         newSessionCreated.attendanceReport;
-      this.sessionService.updateSession(this.selectedSession).subscribe({next: (result) => {
-        console.log(result);
-        this.refresh();
-        this.snackBar.open('Attendance Report Updated Successfully', 'X', {
-          duration: 3000,
-        });
-      },});
+      this.sessionService.updateSession(this.selectedSession).subscribe({
+        next: (result) => {
+          console.log(result);
+          this.refresh();
+          this.snackBar.open('Attendance Report Updated Successfully', 'X', {
+            duration: 3000,
+          });
+        },
+      });
     });
   }
 
@@ -280,7 +297,9 @@ export class LecturerClassComponent implements OnInit {
   }
 
   checkAttendance(userId: string) {
-    const index = this.newAttendanceReport.findIndex(element => element.user._id === userId);
+    const index = this.newAttendanceReport.findIndex(
+      (element) => element.user._id === userId
+    );
     if (index >= 0) {
       this.newAttendanceReport[index].attendanceCheck = true;
     }

@@ -24,7 +24,13 @@ exports.getAllSession = (req, res, next) => {
 };
 
 exports.getSession = (req, res, next) => {
-  Class.findById(req.params.id).populate("attendanceReport").then((session) => {
+  Session.findById(req.params.id).populate({
+    path: "attendanceReport",
+    populate: {
+      path: "user",
+      path: "attendanceCheck"
+    }
+  }).then((session) => {
     res.status(200).json({
       message: "Session fetched successfully",
       session: session,

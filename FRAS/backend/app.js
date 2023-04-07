@@ -43,7 +43,7 @@ app.delete("/api/user/:id", userController.deleteUser);
 app.put("/api/user/:id", userController.updateUser);
 app.get("/api/userGetAllStudent", userController.getAllStudent);
 app.get("/api/userGetAllLecturer", userController.getAllLecturer);
-app.get("/api/userLogin", userController.login);
+app.get("/api/userLogin/:id", userController.login);
 //app.get("/api/user/getLatestUser", userController.getLatestUser);
 
 app.post("/api/subject", subjectController.addSubject);

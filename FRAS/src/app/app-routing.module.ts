@@ -8,6 +8,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { SubjectComponent } from './components/subject/subject.component';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { ClassListComponent } from './components/class-list/class-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'userlist', component: UserListComponent },
   { path: 'lecturerClass', component: LecturerClassComponent },
+  { path: 'classList', component: ClassListComponent },
 
 
 

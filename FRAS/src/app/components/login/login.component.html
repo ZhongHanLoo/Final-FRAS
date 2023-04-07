@@ -1,1 +1,21 @@
-<p>login works! ok i know bye~</p>
+<div class="login-wrapper blue-background" fxLayout="row" fxLayoutAlign="center center">
+  <mat-card class="box">
+    <mat-card-header fxLayout="row" fxLayoutAlign="space-between center">
+      <mat-card-title fxLayoutAlign="center center">FRAS Login</mat-card-title>
+    </mat-card-header>
+    <form class="example-form">
+      <mat-card-content>
+        <mat-form-field class="example-full-width">
+          <input matInput placeholder="User ID" #usernameInput>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <input matInput  type="password" placeholder="Password" #passwordInput>
+        </mat-form-field>
+      </mat-card-content>
+      <div *ngIf="error === true">
+        <p class="center-red">Incorrect User ID or Password</p>
+      </div>
+      <button mat-raised-button  class="btn-block" (click)="login(usernameInput.value, passwordInput.value)">Log in</button>
+    </form>
+  </mat-card>
+</div>

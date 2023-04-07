@@ -25,8 +25,8 @@ export class UserListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {
-    this.userService.getAllUser().subscribe((result: User[]) => {
-      this.userList = result;
+    this.userService.getAllUser().subscribe((result: any) => {
+      this.userList = result.users;
       this.dataSource = new MatTableDataSource<User>(this.userList);
       this.dataSource.paginator = this.paginator;
     });

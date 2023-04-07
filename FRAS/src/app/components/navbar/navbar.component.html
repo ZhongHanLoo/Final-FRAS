@@ -1,4 +1,4 @@
-<mat-nav-list>
+<mat-nav-list *ngIf="userType === 'Admin'">
   <mat-divider></mat-divider>
   <a mat-list-item routerLink="/home">Home</a>
   <mat-divider></mat-divider>
@@ -21,9 +21,15 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <a mat-list-item routerLink="/createClass">Create Class</a>
-    <a mat-list-item routerLink="/class">Class List</a>
+    <a mat-list-item routerLink="/classList">Class List</a>
   </mat-expansion-panel>
+</mat-nav-list>
+
+<mat-nav-list *ngIf="userType === 'Lecturer'">
   <mat-divider></mat-divider>
+  <a mat-list-item routerLink="/home">Home</a>
+  <mat-divider></mat-divider>
+
   <a mat-list-item routerLink="/lecturerClass">Class</a>
   <mat-divider></mat-divider>
 </mat-nav-list>
