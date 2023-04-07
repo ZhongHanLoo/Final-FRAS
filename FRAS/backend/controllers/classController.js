@@ -17,7 +17,7 @@ exports.addClass = (req, res, next) => {
 };
 
 exports.getAllClass = (req, res, next) => {
-  Class.find().then((documents) => {
+  Class.find().populate("subject").populate("lecturer").then((documents) => {
     res.status(200).json({
       message: "Classes fetched successfully",
       classes: documents,

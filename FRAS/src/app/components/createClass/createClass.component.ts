@@ -127,6 +127,7 @@ export class CreateClassComponent implements OnInit{
 
     this.classService.getAllClass().subscribe((result: any) => {
       this.classList = result.classes;
+      console.log(this.classList)
       this.classDataSource = new MatTableDataSource<Class>(this.classList);
       this.classDataSource.paginator = this.classPaginator;
     });
