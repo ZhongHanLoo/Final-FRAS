@@ -1,7 +1,6 @@
-<app-header></app-header>
+<app-header *ngIf="loggedIn"></app-header>
 <mat-sidenav-container>
-
-  <mat-sidenav #sidenav opened="true" mode="side">
+  <mat-sidenav *ngIf="loggedIn" #sidenav opened="true" mode="side">
     <app-navbar></app-navbar>
   </mat-sidenav>
 

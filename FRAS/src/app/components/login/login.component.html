@@ -15,7 +15,7 @@
       <div *ngIf="error === true">
         <p class="center-red">Incorrect User ID or Password</p>
       </div>
-      <button mat-raised-button  class="btn-block" (click)="login(usernameInput.value, passwordInput.value)">Log in</button>
+      <button mat-raised-button  class="btn-block" (click)="checkLogin(usernameInput.value, passwordInput.value)">Log in</button>
     </form>
   </mat-card>
 </div>

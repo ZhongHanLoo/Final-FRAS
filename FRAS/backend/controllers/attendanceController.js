@@ -23,7 +23,7 @@ exports.getAllAttendance = (req, res, next) => {
 };
 
 exports.getAttendance = (req, res, next) => {
-  Attendance.findById(req.params.id).then((attendance) => {
+  Attendance.findById(req.params.id).populate("user").then((attendance) => {
     res.status(200).json({
       message: "Attendance fetched successfully",
       attendance: attendance,

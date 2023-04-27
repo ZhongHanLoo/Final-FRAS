@@ -1,4 +1,5 @@
 const Session = require("../models/session");
+const Attendance = require("../models/attendance");
 
 exports.addSession = (req, res, next) => {
   const session = new Session({
@@ -24,18 +25,29 @@ exports.getAllSession = (req, res, next) => {
 };
 
 exports.getSession = (req, res, next) => {
-  Session.findById(req.params.id).populate({
-    path: "attendanceReport",
-    populate: {
-      path: "user",
-      path: "attendanceCheck"
-    }
-  }).then((session) => {
-    res.status(200).json({
-      message: "Session fetched successfully",
-      session: session,
+  Session.findById(req.params.id)
+    .populate({
+      path: "attendanceReport",
+      populate: {
+        path: "user",
+        path: "attendanceCheck",
+      },
+    })
+    .then((session) => {
+      // const theAttendanceReport = [];
+      // session.attendanceReport.forEach((attendance) => {
+      //   //theAttendanceReport.push(attendance);
+      //   Attendance.findById(attendance._id)
+      //   .then((result) => {
+      //     theAttendanceReport.push("no");
+      //   });
+      // });
+      res.status(200).json({
+        //message: "Session fetched successfully",
+        session: session,
+        //attendanceReport: theAttendanceReport,
+      });
     });
-  });
 };
 
 exports.deleteSession = (req, res, next) => {

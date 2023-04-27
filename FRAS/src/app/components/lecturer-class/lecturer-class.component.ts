@@ -16,6 +16,7 @@ import { SessionService } from 'src/app/services/session.service';
 import { SubjectService } from 'src/app/services/subject.service';
 import { UserService } from 'src/app/services/user.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-lecturer-class',
@@ -33,6 +34,8 @@ export class LecturerClassComponent implements OnInit {
     private loginService: LoginService,
     private attendanceService: AttendanceService
   ) {}
+
+  subscription!: Subscription;
 
   isDisabled = false;
   isExpandedClass = true;
@@ -81,13 +84,13 @@ export class LecturerClassComponent implements OnInit {
   attendanceReportPaginator!: MatPaginator;
 
   ngOnInit(): void {
-    this.classService
-      .getClassByLecturer(this.loginService.getLoginUser())
-      .subscribe((result: any) => {
+    this.subscription = this.loginService.getUser().subscribe((user) => {
+      this.classService.getClassByLecturer(user).subscribe((result: any) => {
         this.classList = result.classes;
         this.classDataSource = new MatTableDataSource<any>(this.classList);
         this.classDataSource.paginator = this.classPaginator;
       });
+    });
   }
 
   applyClassFilter(event: Event) {
@@ -123,9 +126,33 @@ export class LecturerClassComponent implements OnInit {
 
   getSelectedSession(session: any) {
     this.selectedSession = { ...session };
+    this.addNewSession = false;
     console.log(this.selectedSession);
     this.sessionService.getSession(this.selectedSession).subscribe((result) => {
-      this.attendanceList = result.session.attendanceReport;
+      //this.attendanceList = result.session.attendanceReport;
+      console.log(result.session.attendanceReport);
+      let currentAttendanceReport: theAttendance[] = [];
+      for (let attendance of result.session.attendanceReport) {
+        let thisAttendance: theAttendance = {
+          _id: '',
+          userId: '',
+          name: '',
+          attendanceCheck: false,
+        };
+        this.attendanceService
+          .getAttendance(attendance._id)
+          .subscribe((theResult) => {
+            currentAttendanceReport.push(theResult.attendance);
+            console.log(currentAttendanceReport);
+            console.log(theResult);
+            this.attendanceReportDataSource = new MatTableDataSource<any>(
+              currentAttendanceReport
+            );
+            this.attendanceReportDataSource.paginator =
+              this.attendanceReportPaginator;
+          });
+      }
+
       // for (let i = 0; i < this.attendanceList.length; i++) {
       //   let user = this.attendanceList[i]._id;
       //   this.attendanceService.getAttendance(user).subscribe((result2) => {
@@ -137,12 +164,13 @@ export class LecturerClassComponent implements OnInit {
       //   });
 
       // }
-       console.log(this.attendanceList);
+      console.log(this.attendanceList);
+      console.log(currentAttendanceReport);
       //this.attendanceList = this.selectedSession.attendanceReport;
-      this.attendanceReportDataSource =
-        new MatTableDataSource<AttendanceReport>(this.attendanceList);
-      this.attendanceReportDataSource.paginator =
-        this.attendanceReportPaginator;
+      // this.attendanceReportDataSource =
+      //   new MatTableDataSource<any>(currentAttendanceReport);
+      // this.attendanceReportDataSource.paginator =
+      //   this.attendanceReportPaginator;
     });
   }
 
@@ -328,7 +356,7 @@ export class LecturerClassComponent implements OnInit {
     this.newAttendanceReport = [];
     this.newSessionName = '';
     this.addNewSession = false;
-    this.ngOnInit;
+    this.ngOnInit();
     this.newSessionCreated = {
       _id: '',
       name: this.newSessionName,
@@ -336,4 +364,11 @@ export class LecturerClassComponent implements OnInit {
       attendanceReport: [],
     };
   }
+}
+
+interface theAttendance {
+  _id: String;
+  userId: String;
+  name: String;
+  attendanceCheck: boolean;
 }

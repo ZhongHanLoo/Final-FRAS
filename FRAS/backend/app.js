@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 mongoose
   .connect(
     "mongodb+srv://zhonghanloo:FRAS@cluster0.2bybflq.mongodb.net/FRAS?retryWrites=true&w=majority"
+    //"mongodb+srv://saykieran:123@cluster0.tzauktp.mongodb.net/FRAS?retryWrites=true&w=majority"
   )
   .then(() => {
     console.log("connected to database");
@@ -43,7 +44,7 @@ app.delete("/api/user/:id", userController.deleteUser);
 app.put("/api/user/:id", userController.updateUser);
 app.get("/api/userGetAllStudent", userController.getAllStudent);
 app.get("/api/userGetAllLecturer", userController.getAllLecturer);
-app.get("/api/userLogin/:id", userController.login);
+app.post("/api/userLogin", userController.login);
 //app.get("/api/user/getLatestUser", userController.getLatestUser);
 
 app.post("/api/subject", subjectController.addSubject);

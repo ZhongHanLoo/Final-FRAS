@@ -11,11 +11,11 @@ import { Router } from '@angular/router';
 })
 export class LoginService {
   constructor(private http: HttpClient, private router: Router) {}
+  private loggedin = new BehaviorSubject<boolean>(false);
 
   private url = 'user';
 
-  loggedIn = false;
-  private userNav = new BehaviorSubject<User>({
+  user = new BehaviorSubject<User>({
     _id: '',
     userId: '',
     name: '',
@@ -25,60 +25,32 @@ export class LoginService {
     class: [],
   });
 
-  user: User = {
-    _id: '',
-    userId: '',
-    name: '',
-    email: '',
-    password: '',
-    userType: '',
-    class: [],
-  };
-
   public login(userId: String, password: String): Observable<any> {
-
-    return this.http
-      .get<any>(`${environment.apiUrl}/${this.url}Login/${userId}`)
-      .pipe(
-        map((result) => {
-          if (result.user.password != password) {
-            return false;
-          } else {
-            this.user = result.user;
-            this.setLoginUserNav(result.user);
-            this.loggedIn = true;
-            console.log(this.user);
-            return { success: true, user: this.userNav };
-          }
-        })
-      );
+    const authData = { userId, password };
+    return this.http.post<any>(
+      `${environment.apiUrl}/${this.url}Login`,
+      authData
+    );
   }
 
-  setLoginUserNav(data: User){
-    this.userNav.next(data);
+  public getUser() {
+    return this.user.asObservable();
   }
 
-  public getLoginUserNav() {
-    return this.userNav.asObservable();
+  public setEmployee(data: User) {
+    this.user.next(data);
   }
 
-  public getLoginUser() {
-    return this.user;
+  getLoggedIn(): Observable<boolean> {
+    return this.loggedin.asObservable();
   }
 
-  public logout(){
-    const userNav: User = {
-      _id: '',
-      userId: '',
-      name: '',
-      email: '',
-      password: '',
-      userType: '',
-      class: [],
-    };
-    this.userNav.next(userNav);
+  setLoggedIn(loggedInValue: boolean) {
+    this.loggedin.next(loggedInValue);
+  }
+
+  logout() {
+    this.setLoggedIn(false);
     this.router.navigate(['/login']);
   }
-
-
 }

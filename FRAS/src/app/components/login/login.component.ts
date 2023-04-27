@@ -9,26 +9,27 @@ import { NavbarComponent } from '../navbar/navbar.component';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private loginService: LoginService,
-    private router: Router,
-  ) {}
-  @ViewChild(NavbarComponent) navbarComponent!: NavbarComponent;
+
+  constructor(private loginService: LoginService, private router: Router) {}
+
+  loggedin = false;
   error = false;
 
-  login(userId: string, password: string) {
-    this.loginService.login(userId, password).subscribe((result) => {
-      if (result === false) {
-        this.error = true
-      }else{
-        this.error = false
-        console.log(result.user.userType)
-        // setTimeout(() => {
-        //   this.navbarComponent.setUserType('lecturer');
-        // }, 10);
+  checkLogin(employeeId: String, password: String): any {
+    this.loginService.login(employeeId, password).subscribe((result) => {
+      console.log(result);
+      if (result.user) {
+        this.loginService.setLoggedIn(true);
+        this.loginService.setEmployee(result.user);
+        this.setError(false);
         this.router.navigate(['/home']);
+      } else {
+        this.setError(true);
       }
     });
+  }
+
+  setError(value: boolean) {
+    this.error = value;
   }
 }

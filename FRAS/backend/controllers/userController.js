@@ -78,7 +78,17 @@ exports.getAllLecturer = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-  User.findOne({  userId: req.params.id} ).then((user) => {
+  // User.findOne({  userId: req.params.id} ).then((user) => {
+  //   res.status(200).json({
+  //     message: "User fetched successfully",
+  //     user: user,
+  //   });
+  // });
+
+  User.findOne({
+    userId: req.body.userId,
+    password: req.body.password,
+  }).then((user) => {
     res.status(200).json({
       message: "User fetched successfully",
       user: user,

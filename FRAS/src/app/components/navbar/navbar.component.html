@@ -1,4 +1,4 @@
-<mat-nav-list *ngIf="userType === 'Admin'">
+<mat-nav-list *ngIf="user.userType === 'Admin'">
   <mat-divider></mat-divider>
   <a mat-list-item routerLink="/home">Home</a>
   <mat-divider></mat-divider>
@@ -25,7 +25,7 @@
   </mat-expansion-panel>
 </mat-nav-list>
 
-<mat-nav-list *ngIf="userType === 'Lecturer'">
+<mat-nav-list *ngIf="user.userType === 'Lecturer'">
   <mat-divider></mat-divider>
   <a mat-list-item routerLink="/home">Home</a>
   <mat-divider></mat-divider>
